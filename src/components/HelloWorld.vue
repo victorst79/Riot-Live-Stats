@@ -34,7 +34,19 @@
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
+  },
+  data: function(){
+      return{
+          riot: ""          
+      }
+  },
+  created () {
+      this.$http
+          // .get('http://euw1.api.riotgames.com//lol/summoner/v4/summoners/by-name/MAct0r?api_key=RGAPI-da9cd7a8-7451-402c-9a81-f423be77a3d8')
+          .get('http://ddragon.leagueoflegends.com/cdn/9.5.1/data/es_ES/champion.json')
+          .then((response) => {this.riot = response.data.data['Aatrox'].image.sprite})
+          .catch((error) => {alert(error)})
   }
 }
 </script>
