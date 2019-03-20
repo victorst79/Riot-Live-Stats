@@ -43,9 +43,9 @@ export default {
   },
   created () {
     this.$http
-      .get('http://euw1.api.riotgames.com//lol/summoner/v4/summoners/by-name/MAct0r?api_key=RGAPI-da9cd7a8-7451-402c-9a81-f423be77a3d8')
+      .get('https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/MAct0r?api_key=RGAPI-e71303ef-66c9-49ae-81e9-a07af8924d5a')
       .then((response) => {this.riot = this.response})
-      .catch((error) => {alert(error)})
+      .catch((error) => {console.log(error)})
   }
 }
 </script>
