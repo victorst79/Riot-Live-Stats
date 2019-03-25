@@ -1,0 +1,15 @@
+{
+  "name": "server-riot-api",
+  "version": "1.0.0",
+  "description": "Server write in node and js for live stats /w api riot",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  }
+}
