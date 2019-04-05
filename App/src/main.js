@@ -5,8 +5,16 @@ import App from './App.vue'
 import router from './router'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import VueSocketIO from 'vue-socket.io'
 
 Vue.use(VueAxios, axios)
+
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: 'http://localhost:3000/',
+  // connection: window.location.hostname
+}))
+
 Vue.config.productionTip = false
 
 new Vue({

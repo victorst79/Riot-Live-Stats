@@ -32,7 +32,7 @@ io.on('connection', function(socket){
     socket.on('user',function(user){
         console.log(user + " connected");
         socket.broadcast.emit('newUser',user);
-
+        socket.broadcast.emit(console.log('prueba'));
 
         // ME USER CHAT
         socket.emit('meNameChat',user);
