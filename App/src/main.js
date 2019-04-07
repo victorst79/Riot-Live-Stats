@@ -9,6 +9,7 @@ import VueSocketIO from 'vue-socket.io'
 
 Vue.use(VueAxios, axios)
 
+// CONEXION CON EXPRESS
 Vue.use(new VueSocketIO({
   debug: true,
   connection: 'http://localhost:3000/',

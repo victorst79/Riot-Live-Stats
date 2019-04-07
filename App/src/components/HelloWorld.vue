@@ -38,14 +38,18 @@ export default {
   },
   data: function(){
     return{
-      riot: ""          
+      user: '',     
     }
-  },
-  created () {
-    this.$http
-      .get('https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/MAct0r?api_key=RGAPI-e71303ef-66c9-49ae-81e9-a07af8924d5a')
-      .then((response) => {this.riot = this.response})
-      .catch((error) => {console.log(error)})
+  },  
+  sockets: {
+    connect: function () {
+        console.log('socket connected')
+    },
+    user: function (data) {
+      console.log('USER RECEIVED');
+      this.user = JSON.parse(data);
+      console.log(this.user);
+		},
   }
 }
 </script>
