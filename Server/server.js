@@ -18,9 +18,9 @@ function get_summoner(summonerName){
     if (err) {
         throw err;
     }
-    console.log(json);
-    summoner = json;        
-});
+        console.log(json);
+        summoner = json;        
+    });
 }
 
 // request({url: 'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Eliczika?api_key=RGAPI-9192060b-fc4e-4815-a2d5-e5da6a65c396', json: true}, function(err, res, json) {
