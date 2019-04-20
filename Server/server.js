@@ -7,9 +7,11 @@ var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
 // VARIABLES
-const api_key = 'RGAPI-301b283a-41e0-493c-ac61-22ef21753988';
+const api_key = 'RGAPI-300b6064-af75-4d53-8d5d-b8459f8b1bcb';
+
 var summoner;
 var match;
+var participants;
 
 // FUNCTIONS
 /**
@@ -21,13 +23,13 @@ function get_summoner(summonerName){
     if (err) {
         throw err;
     }
-        console.log(json);
         summoner = json;
     });
 }
 
 /**
  * Obtiene los datos del match actual en base a la ID de summoner
+ * @param summonerID
  */
 function get_match(summonerID){
     
@@ -35,18 +37,19 @@ function get_match(summonerID){
     if (err) {
         throw err;
     }
-        console.log(json);
+        participants = json.participants;
         match = json;
+        console.log(json)
     });
 }
 
-// request({url: 'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/Eliczika?api_key=RGAPI-9192060b-fc4e-4815-a2d5-e5da6a65c396', json: true}, function(err, res, json) {
-//     if (err) {
-//         throw err;
-//     }
-//     console.log(json);
-//     summoner = json;        
-// });
+/**
+ * Obtiene una lista de las 100 ultimas partidas del jugador para calcular la media de campeones mas jugados
+ * @param summonerID 
+ */
+function get_bestChampions(summonerID){
+
+}
 
 // SOCKET.IO
 io.on('connection', function(socket){
@@ -56,10 +59,13 @@ io.on('connection', function(socket){
     socket.on('searchSummoner',function(data){
         get_summoner(JSON.parse(data));
 
-        
         // DEVUELVE LOS DATOS DEL SUMMONER
-        io.emit('summonerData',JSON.stringify(summoner));
-        
-        console.log(match);
+        io.emit('summonerData', JSON.stringify(summoner));
+
+        socket.on('summonerID', function(data){
+            get_match(JSON.parse(data));
+            
+            io.emit('matchParticipants', JSON.stringify(participants));
+        });
     });
 });
