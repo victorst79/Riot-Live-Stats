@@ -10,6 +10,7 @@ export default {
     return{
       summonerToSearch: '',
       summoner: '',
+      match: '',
       participants: ''
     }
   },  
@@ -22,16 +23,25 @@ export default {
       // ENVIA LA ID DEL SUMMONER AL RECIBIR TODOS LOS DATOS (NECESITA PULIRSE ESTA FUNCION)
       this.summonerId(this.summoner);
     },
-    matchParticipants: function (data){
-      this.participants = JSON.parse(data);
+    matchData: function (data){
+      this.match = JSON.parse(data);
+      this.participants = this.match.participants;
     }
   },
   methods: {
+    // ENVIA AL SERVIDOR INFORMACION SOBRE EL NOMBRE DE INVOCADOR
     searchSummoner: function () {
       this.$socket.emit('searchSummoner', JSON.stringify(this.summonerToSearch));
     },
+    // ENVIA LA ID DE SUMMONER PARA OBTENER INFORMACION DE UN MATCH
     summonerId: function () {
       this.$socket.emit('summonerID' , JSON.stringify(this.summoner.id));
+    },
+    // FUNCION PARA OBTENER DATOS BASICOS DE CADA JUGADOR DE LA PARTIDA
+    summonerData: function () {
+      for(let i = 0; i < this.participants.legth; i++) {
+        this.$socket.emit('summonerBasicData',JSON.stringify(this.participants[i]));
+      }      
     }
   }
 }

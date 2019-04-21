@@ -7,7 +7,7 @@ var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
 // VARIABLES
-const api_key = 'RGAPI-300b6064-af75-4d53-8d5d-b8459f8b1bcb';
+const api_key = 'RGAPI-ca8dad09-7ee3-4ab6-ba3a-ad9d1db915c4';
 
 var summoner;
 var match;
@@ -31,23 +31,33 @@ function get_summoner(summonerName){
  * Obtiene los datos del match actual en base a la ID de summoner
  * @param summonerID
  */
-function get_match(summonerID){
-    
+function get_match(summonerID){    
     request({url: 'https://euw1.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/'+ summonerID +'?api_key='+ api_key +'', json: true}, function(err, res, json) {
     if (err) {
         throw err;
     }
-        participants = json.participants;
         match = json;
-        console.log(json)
+    });
+}
+
+/**
+ * Devuelve la informacion basica de la cuenta de un jugador mediante 
+ * @param summonerID 
+ */
+function get_basicDataSummoner(summonerID){
+    request({url: 'https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+ summonerID +'?api_key='+ api_key +'', json: true}, function(err, res, json) {
+    if (err) {
+        throw err;
+    }
+        return json;
     });
 }
 
 /**
  * Obtiene una lista de las 100 ultimas partidas del jugador para calcular la media de campeones mas jugados
- * @param summonerID 
+ * @param accountID 
  */
-function get_bestChampions(summonerID){
+function get_bestChampions(accountID){
 
 }
 
@@ -65,7 +75,13 @@ io.on('connection', function(socket){
         socket.on('summonerID', function(data){
             get_match(JSON.parse(data));
             
-            io.emit('matchParticipants', JSON.stringify(participants));
+            // ENVIA TODA LA INFORMACION DE LA PARTIDA AL CLIENTE
+            io.emit('matchData', JSON.stringify(match));
         });
+    });
+
+    // INFORMACION SOBRE CADA JUGADOR
+    socket.on('summonerInfo', function(data) {
+        io.emit('summonerBasicData', JSON.stringify(get_basicDataSummoner(JSON.parse(data))));
     });
 });
