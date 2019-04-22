@@ -1,6 +1,13 @@
 <template>
   <div class="main">
-    <input type="text" v-model="summonerToSearch" @keypress.enter="searchSummoner">
+    
+    <div v-if="statsOn == true">
+      <h1>entra</h1>
+    </div>
+    <div v-else>
+      <h1>sin datos</h1>
+      <input type="text" v-model="summonerToSearch" @keypress.enter="searchSummoner">
+    </div>
   </div>
 </template>
 
@@ -11,7 +18,9 @@ export default {
       summonerToSearch: '',
       summoner: '',
       match: '',
-      participants: ''
+      participants: '',
+      infoParticipants: '',
+      statsOn: false,
     }
   },  
   sockets: {
@@ -26,6 +35,11 @@ export default {
     matchData: function (data){
       this.match = JSON.parse(data);
       this.participants = this.match.participants;
+
+      this.summonerData(this.participants);
+    },
+    summonerBasicData: function (data) {
+      this.infoParticipants = (JSON.parse(data));
     }
   },
   methods: {
@@ -39,10 +53,8 @@ export default {
     },
     // FUNCION PARA OBTENER DATOS BASICOS DE CADA JUGADOR DE LA PARTIDA
     summonerData: function () {
-      for(let i = 0; i < this.participants.legth; i++) {
-        this.$socket.emit('summonerBasicData',JSON.stringify(this.participants[i]));
-      }      
-    }
+      this.$socket.emit('summonerInfo', JSON.stringify(this.participants));
+    },
   }
 }
 </script>

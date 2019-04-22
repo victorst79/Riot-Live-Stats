@@ -7,11 +7,12 @@ var server = app.listen(3000);
 var io = require('socket.io').listen(server);
 
 // VARIABLES
-const api_key = 'RGAPI-ca8dad09-7ee3-4ab6-ba3a-ad9d1db915c4';
+const api_key = 'RGAPI-d45e9026-a5db-476a-b2dd-0d55a7a44be9';
 
 var summoner;
 var match;
 var participants;
+var infoParticipant = [];
 
 // FUNCTIONS
 /**
@@ -41,16 +42,18 @@ function get_match(summonerID){
 }
 
 /**
- * Devuelve la informacion basica de la cuenta de un jugador mediante 
- * @param summonerID 
+ * Devuelve la informacion basica de la cuenta de los jugadores de una partida
+ * @param participants 
  */
-function get_basicDataSummoner(summonerID){
-    request({url: 'https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+ summonerID +'?api_key='+ api_key +'', json: true}, function(err, res, json) {
-    if (err) {
-        throw err;
+function get_basicDataSummoner(participants){
+    for(let i = 0; i < 10; i++){
+        request({url: 'https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/'+ participants[i].summonerId +'?api_key='+ api_key +'', json: true}, function(err, res, json) {
+        if (err) {
+            throw err;
+        }
+            infoParticipant.push(json);
+        });
     }
-        return json;
-    });
 }
 
 /**
@@ -77,11 +80,13 @@ io.on('connection', function(socket){
             
             // ENVIA TODA LA INFORMACION DE LA PARTIDA AL CLIENTE
             io.emit('matchData', JSON.stringify(match));
-        });
-    });
 
-    // INFORMACION SOBRE CADA JUGADOR
-    socket.on('summonerInfo', function(data) {
-        io.emit('summonerBasicData', JSON.stringify(get_basicDataSummoner(JSON.parse(data))));
-    });
+            // INFORMACION SOBRE CADA JUGADOR
+            socket.on('summonerInfo', function(data) {
+                get_basicDataSummoner(JSON.parse(data));
+
+                io.emit('summonerBasicData', JSON.stringify(infoParticipant));
+            });
+        });
+    });    
 });
