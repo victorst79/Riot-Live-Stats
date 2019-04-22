@@ -56,14 +56,6 @@ function get_basicDataSummoner(participants){
     }
 }
 
-/**
- * Obtiene una lista de las 100 ultimas partidas del jugador para calcular la media de campeones mas jugados
- * @param accountID 
- */
-function get_bestChampions(accountID){
-
-}
-
 // SOCKET.IO
 io.on('connection', function(socket){
     console.log("New Conexion");
